@@ -1,0 +1,32 @@
+a {
+    text-decoration: none; /* Remove underline */
+    font-size: 18px; /* Increase font size */
+    color: #007bff; /* Link color */
+    margin-bottom: 5px; /* Space below the link */
+}
+
+h1 {
+    font-size: 24px; /* Size of the heading */
+    color: #333; /* Darker color for the heading */
+    margin: 5px 0; /* Margin for the heading */
+}
+
+#score {
+    font-size: 20px; /* Size of the score text */
+    color: #000; /* Color of the score text */
+    margin-bottom: 10px; /* Space below the score */
+}
+
+canvas {
+    background-color: #000; /* Background color of the canvas */
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Left align the contents */
+    justify-content: center;
+    margin: 0;
+    padding-top: 5px; /* Add gap at the top */
+    background-color: #f0f0f0; /* Light background color */
+}
