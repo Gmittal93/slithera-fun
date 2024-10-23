@@ -41,7 +41,6 @@ function randomFoodPosition() {
 }
 
 function gameLoop() {
-    food = randomFoodPosition();
     update();
     draw();
 }
