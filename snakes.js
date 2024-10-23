@@ -2,46 +2,50 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const scoreElement = document.getElementById('score');
 
-const tileSize = 20;
-const tileCount = canvas.width / tileSize;
+let tileSize = 20; // This will change dynamically based on the screen size
+let tileCountX;
+let tileCountY;
 
-let snake = [
-    { x: 10, y: 10 }, // Head
-    { x: 9, y: 10 },  // Body
-    { x: 8, y: 10 },  // Pre-Tail
-    { x: 7, y: 10 }   // Post-Tail
-];
+// Automatically adjust the canvas size based on the screen size
+function adjustCanvasSize() {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
 
-let snakeDir = { x: 1, y: 0 }; // Moving to the right by default
-let food = randomFoodPosition();
-let score = 0;
+    // Calculate the maximum height and width based on the viewport
+    const maxHeight = window.innerHeight * 0.8; // Use 70% of the screen height
+    const maxWidth = window.innerWidth * 0.8; // Use 90% of the screen width
 
-// Load images for the snake parts from 'media/images/sprites/'
-const headImg = new Image();
-headImg.src = 'media/images/sprites/head.png';
-const bodyImg = new Image();
-bodyImg.src = 'media/images/sprites/body.png';
-const preTailImg = new Image();
-preTailImg.src = 'media/images/sprites/pre_tail.png';
-const postTailImg = new Image();
-postTailImg.src = 'media/images/sprites/post_tail.png';
+    canvas.width = Math.floor(Math.min(maxHeight, maxWidth)/tileSize) * tileSize;
+    canvas.height = Math.floor(Math.min(maxHeight, maxWidth)/tileSize) * tileSize;
 
-// Load image for the pallet from 'media/images/sprites/'
-const palletImg = new Image();
-palletImg.src = 'media/images/sprites/pallet.png';
+    // Calculate the number of tiles and tile size based on the canvas size
+    tileCountX = Math.floor(canvas.width / tileSize);
+    tileCountY = Math.floor(canvas.height / tileSize);
+}
+
+// Call adjustCanvasSize at the beginning
+adjustCanvasSize();
+
+
+// // Re-adjust canvas size if window is resized
+// window.addEventListener('resize', adjustCanvasSize);
+
 
 // Generate a random position for the food (pallet)
 function randomFoodPosition() {
-    return {
-        x: Math.floor(Math.random() * tileCount),
-        y: Math.floor(Math.random() * tileCount)
+    let food = {
+        x: Math.floor(Math.random() * tileCountX),
+        y: Math.floor(Math.random() * tileCountY)
     };
+    return food
 }
 
 function gameLoop() {
+    food = randomFoodPosition();
     update();
     draw();
 }
+
 
 function update() {
     const head = { x: snake[0].x + snakeDir.x, y: snake[0].y + snakeDir.y };
@@ -58,7 +62,7 @@ function update() {
     snake.unshift(head); // Add new head to the snake
 
     // Check for collisions (wall or self)
-    if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount || selfCollision(head)) {
+    if (head.x < 0 || head.x >= tileCountX || head.y < 0 || head.y >= tileCountY || selfCollision(head)) {
         resetGame();
     }
 }
@@ -73,13 +77,21 @@ function selfCollision(head) {
     return false;
 }
 
+function sleep(miliseconds) {
+   var currentTime = new Date().getTime();
+
+   while (currentTime + miliseconds >= new Date().getTime()) {
+   }
+}
+
 // Reset the game if a collision occurs
 function resetGame() {
+    sleep(500)
     snake = [
-        { x: 10, y: 10 }, // Head
-        { x: 9, y: 10 },  // Body
-        { x: 8, y: 10 },  // Pre-Tail
-        { x: 7, y: 10 }   // Post-Tail
+        { x: 3, y: 3 }, // Head
+        { x: 2, y: 3 },  // Body
+        { x: 1, y: 3 },  // Pre-Tail
+        { x: 0, y: 3 }   // Post-Tail
     ];
     snakeDir = { x: 1, y: 0 }; // Moving right by default
     score = 0;
@@ -110,7 +122,7 @@ function draw() {
     });
 }
 
-// Change direction of the snake
+// Change direction of the snake using keyboard
 function changeDirection(event) {
     switch (event.keyCode) {
         case 37: // Left arrow
@@ -128,8 +140,85 @@ function changeDirection(event) {
     }
 }
 
-// Event listener for key presses to control the snake
+// Detect touch start
+function handleTouchStart(event) {
+    const firstTouch = event.touches[0];
+    touchStartX = firstTouch.clientX;
+    touchStartY = firstTouch.clientY;
+}
+
+// Detect touch end and calculate the direction of the swipe
+function handleTouchEnd(event) {
+    touchEndX = event.changedTouches[0].clientX;
+    touchEndY = event.changedTouches[0].clientY;
+    handleSwipe();
+}
+
+// Handle swipe direction based on the touch movement
+function handleSwipe() {
+    const diffX = touchEndX - touchStartX;
+    const diffY = touchEndY - touchStartY;
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        // Swipe was horizontal
+        if (diffX > 0 && snakeDir.x === 0) {
+            snakeDir = { x: 1, y: 0 }; // Right swipe
+        } else if (diffX < 0 && snakeDir.x === 0) {
+            snakeDir = { x: -1, y: 0 }; // Left swipe
+        }
+    } else {
+        // Swipe was vertical
+        if (diffY > 0 && snakeDir.y === 0) {
+            snakeDir = { x: 0, y: 1 }; // Down swipe
+        } else if (diffY < 0 && snakeDir.y === 0) {
+            snakeDir = { x: 0, y: -1 }; // Up swipe
+        }
+    }
+}
+
+
+
+let snake = [
+    { x: 3, y: 3 }, // Head
+    { x: 2, y: 3 },  // Body
+    { x: 1, y: 3 },  // Pre-Tail
+    { x: 0, y: 3 }   // Post-Tail
+];
+
+let snakeDir = { x: 1, y: 0 }; // Moving to the right by default
+let food 
+food = randomFoodPosition();
+let score = 0;
+
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
+// Load images for the snake parts from 'media/images/sprites/'
+const headImg = new Image();
+headImg.src = 'media/images/sprites/head.png';
+
+const bodyImg = new Image();
+bodyImg.src = 'media/images/sprites/body.png';
+
+const preTailImg = new Image();
+preTailImg.src = 'media/images/sprites/pre_tail.png';
+
+const postTailImg = new Image();
+postTailImg.src = 'media/images/sprites/post_tail.png';
+
+const palletImg = new Image();
+palletImg.src = 'media/images/sprites/pallet.png';
+
+
+
+// Event listener for keyboard direction
 document.addEventListener('keydown', changeDirection);
+
+// Event listeners for touch swipe gestures
+canvas.addEventListener('touchstart', handleTouchStart, false);
+canvas.addEventListener('touchend', handleTouchEnd, false);
 
 // Run the game loop every 100ms
 setInterval(gameLoop, 100);
