@@ -1,17 +1,23 @@
-<title>Slithera: Home</title><!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slithera: Home</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js"></script>
+</head>
+<body>
+    <div class="top-space"></div>
 
-<ol>
-    <li>
-        <a href="snakes.html">Snakes</a>
-    </li>
-    <li>
-        <a href="space_invaders.html">Space invaders</a>
-    </li>
-    <li>
-        <a href="astroid_defence.html">Astroid defence</a>
-    </li>
-</ol>
-
-
-
-
+    <div class="container">
+        <button class="game-button" onclick="navigateTo('snakes.html')">New Game</button>
+        <br/>
+        <button class="game-button" onclick="navigateTo('blog.html')">Blog</button>
+        <br/>
+        <button class="game-button" onclick="navigateTo('lore.html')">Lore.. so far</button>
+    </div>
+    
+    <div class="bottom-space"></div>
+</body>
+</html>

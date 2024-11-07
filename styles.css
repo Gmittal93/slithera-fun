@@ -1,0 +1,52 @@
+/* Basic reset and body styling */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #333;
+}
+
+/* Placeholder space at the top and bottom */
+.top-space {
+    height: min(10vh, 100px); /* 10% of viewport height */
+}
+
+/* Centered container with equal spacing */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    /* justify-content: space-between; */
+    height: min(90vh, 700px); /* 60% of viewport height, leaving 10% on top and bottom */
+}
+
+/* Button styling */
+.game-button {
+    background: url('media/images/button.png') no-repeat center center;
+    background-size: contain;
+    width: min(80vw, 508px); /* Responsive width: maxes out at 200px */
+    height: min(40vw, 186px); /* Responsive height: maxes out at 100px */
+    border: none;
+    cursor: pointer;
+    animation: rock 1s infinite ease-in-out;
+    transition: transform 0.2s;
+}
+
+/* Hover effect */
+.game-button:hover {
+    animation: none;
+    transform: scale(1.05);
+    
+}
+
+/* Rocking animation */
+@keyframes rock {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
